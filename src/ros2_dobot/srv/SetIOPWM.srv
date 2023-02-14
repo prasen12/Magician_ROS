@@ -1,0 +1,7 @@
+uint8 address
+float32 frequency
+float32 duty_cycle
+bool is_queued
+---
+int32 result
+uint64 queued_cmd_index

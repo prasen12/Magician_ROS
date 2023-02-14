@@ -1,0 +1,6 @@
+uint8 address
+uint8 multiplex
+bool is_queued
+---
+int32 result
+uint64 queued_cmd_index
