@@ -3,10 +3,15 @@ cmake_minimum_required(VERSION 3.8)
 project(ros2_dobot)
 set(CMAKE_COLOR_MAKEFILE off)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic) 
 endif()
 
 execute_process(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE BUILD_ARCH)
+
+if (BUILD_ARCH  STREQUAL "x86_64")
+  add_compile_options(-fPIC)
+  add_definitions(-DQT_NO_VERSION_TAGGING)
+endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -85,13 +90,23 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 ament_export_dependencies(rosidl_default_runtime)
 
+# Dobot Server
 add_executable(DobotServer src/DobotServer.cpp)
-
+if (BUILD_ARCH  STREQUAL "x86_64")
+  set_target_properties(DobotServer PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+endif()
 ament_target_dependencies(DobotServer rclcpp std_msgs)
 rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} "rosidl_typesupport_cpp")
-
 target_link_libraries(DobotServer DobotDll "${cpp_typesupport_target}")
+
+# Dobot PTP Client
+add_executable(DobotClient src/DobotClient_PTP.cpp)
+ament_target_dependencies(DobotClient rclcpp std_msgs)
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} "rosidl_typesupport_cpp")
+target_link_libraries(DobotClient "${cpp_typesupport_target}")
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -107,6 +122,7 @@ endif()
 
 install(TARGETS 
   DobotServer
+  DobotClient
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
