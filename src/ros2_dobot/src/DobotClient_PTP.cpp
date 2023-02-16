@@ -17,8 +17,8 @@
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("DobotClient");
-    auto logger = rclcpp::get_logger("DobotClient");
+    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("DobotClient_PTP");
+    auto logger = rclcpp::get_logger("DobotClient_PTP");
     auto setCmdTimeoutclient = node->create_client<ros2_dobot::srv::SetCmdTimeout>("/DobotServer/SetCmdTimeout");
 
     RCLCPP_INFO(logger, "Connecting to DobotServer node ...");

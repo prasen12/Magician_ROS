@@ -20,9 +20,10 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Core)
+find_package(Boost REQUIRED COMPONENTS thread)
 
 include_directories(include ${Qt5Core_INCLUDE_DIRS})
-link_directories(lib/${BUILD_ARCH})
+link_directories(lib/${BUILD_ARCH} ${Boost_LIBRARY_DIRS})
 
 rosidl_generate_interfaces(${PROJECT_NAME}
 "srv/ClearAllAlarmsState.srv"
@@ -101,12 +102,18 @@ rosidl_get_typesupport_target(cpp_typesupport_target
 target_link_libraries(DobotServer DobotDll "${cpp_typesupport_target}")
 
 # Dobot PTP Client
-add_executable(DobotClient src/DobotClient_PTP.cpp)
-ament_target_dependencies(DobotClient rclcpp std_msgs)
+add_executable(DobotClient_PTP src/DobotClient_PTP.cpp)
+ament_target_dependencies(DobotClient_PTP rclcpp std_msgs Boost)
 rosidl_get_typesupport_target(cpp_typesupport_target
   ${PROJECT_NAME} "rosidl_typesupport_cpp")
-target_link_libraries(DobotClient "${cpp_typesupport_target}")
+target_link_libraries(DobotClient_PTP "${cpp_typesupport_target}")
 
+# Dobot JOG Client
+add_executable(DobotClient_JOG src/DobotClient_JOG.cpp)
+ament_target_dependencies(DobotClient_JOG rclcpp std_msgs geometry_msgs)
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} "rosidl_typesupport_cpp")
+target_link_libraries(DobotClient_JOG  ${Boost_LIBRARIES} "${cpp_typesupport_target}")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -122,7 +129,8 @@ endif()
 
 install(TARGETS 
   DobotServer
-  DobotClient
+  DobotClient_PTP
+  DobotClient_JOG
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

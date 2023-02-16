@@ -227,7 +227,7 @@ void GetEndEffectorParamsService(std::shared_ptr<ros2_dobot::srv::GetEndEffector
     }
 }
 
-bool SetEndEffectorLaserService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorLaser::Request> req, std::shared_ptr<ros2_dobot::srv::SetEndEffectorLaser::Response> res)
+void SetEndEffectorLaserService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorLaser::Request> req, std::shared_ptr<ros2_dobot::srv::SetEndEffectorLaser::Response> res)
 {
     uint64_t queued_cmd_index;
 
@@ -236,10 +236,9 @@ bool SetEndEffectorLaserService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorL
         res->queued_cmd_index = queued_cmd_index;
     }
 
-    return true;
 }
 
-bool GetEndEffectorLaserService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorLaser::Request> req, std::shared_ptr<ros2_dobot::srv::GetEndEffectorLaser::Response> res)
+void GetEndEffectorLaserService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorLaser::Request> req, std::shared_ptr<ros2_dobot::srv::GetEndEffectorLaser::Response> res)
 {
     bool enable_ctrl, on;
 
@@ -249,10 +248,9 @@ bool GetEndEffectorLaserService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorL
         res->on = on;
     }
 
-    return true;
 }
 
-bool SetEndEffectorSuctionCupService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorSuctionCup::Request> req, std::shared_ptr<ros2_dobot::srv::SetEndEffectorSuctionCup::Response> res)
+void SetEndEffectorSuctionCupService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorSuctionCup::Request> req, std::shared_ptr<ros2_dobot::srv::SetEndEffectorSuctionCup::Response> res)
 {
     uint64_t queued_cmd_index;
 
@@ -261,9 +259,8 @@ bool SetEndEffectorSuctionCupService(std::shared_ptr<ros2_dobot::srv::SetEndEffe
         res->queued_cmd_index = queued_cmd_index;
     }
 
-    return true;
 }
-bool GetEndEffectorSuctionCupService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorSuctionCup::Request> req, std::shared_ptr<ros2_dobot::srv::GetEndEffectorSuctionCup::Response> res)
+void GetEndEffectorSuctionCupService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorSuctionCup::Request> req, std::shared_ptr<ros2_dobot::srv::GetEndEffectorSuctionCup::Response> res)
 {
     bool enable_ctrl, suck;
 
@@ -273,10 +270,9 @@ bool GetEndEffectorSuctionCupService(std::shared_ptr<ros2_dobot::srv::GetEndEffe
         res->suck = suck;
     }
 
-    return true;
 }
 
-bool SetEndEffectorGripperService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorGripper::Request> req, std::shared_ptr<ros2_dobot::srv::SetEndEffectorGripper::Response> res)
+void SetEndEffectorGripperService(std::shared_ptr<ros2_dobot::srv::SetEndEffectorGripper::Request> req, std::shared_ptr<ros2_dobot::srv::SetEndEffectorGripper::Response> res)
 {
     uint64_t queued_cmd_index;
 
@@ -285,10 +281,9 @@ bool SetEndEffectorGripperService(std::shared_ptr<ros2_dobot::srv::SetEndEffecto
         res->queued_cmd_index = queued_cmd_index;
     }
 
-    return true;
 }
 
-bool GetEndEffectorGripperService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorGripper::Request> req, std::shared_ptr<ros2_dobot::srv::GetEndEffectorGripper::Response> res)
+void GetEndEffectorGripperService(std::shared_ptr<ros2_dobot::srv::GetEndEffectorGripper::Request> req, std::shared_ptr<ros2_dobot::srv::GetEndEffectorGripper::Response> res)
 {
     bool enable_ctrl, grip;
 
@@ -298,7 +293,6 @@ bool GetEndEffectorGripperService(std::shared_ptr<ros2_dobot::srv::GetEndEffecto
         res->grip = grip;
     }
 
-    return true;
 }
 
 
@@ -439,8 +433,332 @@ void GetPTPCommonParamsService(std::shared_ptr<ros2_dobot::srv::GetPTPCommonPara
     }
 }
 
+/*
+ * CP
+ */
+#include "ros2_dobot/srv/set_cp_params.hpp"
+#include "ros2_dobot/srv/get_cp_params.hpp"
+#include "ros2_dobot/srv/set_cp_cmd.hpp"
+
+void SetCPParamsService(std::shared_ptr<ros2_dobot::srv::SetCPParams::Request> req, std::shared_ptr<ros2_dobot::srv::SetCPParams::Response> res)
+{
+    CPParams params;
+    uint64_t queued_cmd_index;
+
+    params.planAcc = req->plan_acc;
+    params.juncitionVel = req->junction_vel;
+    params.acc = req->acc;
+    params.realTimeTrack = req->real_time_track;
+    res->result = SetCPParams(&params, req->is_queued, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+void GetCPParamsService(std::shared_ptr<ros2_dobot::srv::GetCPParams::Request> req, std::shared_ptr<ros2_dobot::srv::GetCPParams::Response> res)
+{
+    CPParams params;
+
+    res->result = GetCPParams(&params);
+    if (res->result == DobotCommunicate_NoError) {
+        res->plan_acc = params.planAcc;
+        res->junction_vel = params.juncitionVel;
+        res->acc = params.acc;
+        res->real_time_track = params.realTimeTrack;
+    }
+
+}
+
+void SetCPCmdService(std::shared_ptr<ros2_dobot::srv::SetCPCmd::Request> req, std::shared_ptr<ros2_dobot::srv::SetCPCmd::Response> res)
+{
+    CPCmd cmd;
+    uint64_t queued_cmd_index;
+
+    cmd.cpMode = req->cp_mode;
+    cmd.x = req->x;
+    cmd.y = req->y;
+    cmd.z = req->z;
+    cmd.velocity = req->velocity;
+
+    res->result = SetCPCmd(&cmd, true, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+/*
+ * ARC
+ */
+#include "ros2_dobot/srv/set_arc_params.hpp"
+#include "ros2_dobot/srv/get_arc_params.hpp"
+#include "ros2_dobot/srv/set_arc_cmd.hpp"
+
+void SetARCParamsService(std::shared_ptr<ros2_dobot::srv::SetARCParams::Request> req, std::shared_ptr<ros2_dobot::srv::SetARCParams::Response> res)
+{
+    ARCParams params;
+    uint64_t queued_cmd_index;
+
+    params.xyzVelocity = req->xyz_velocity;
+    params.rVelocity = req->r_velocity;
+    params.xyzAcceleration = req->xyz_acceleration;
+    params.rAcceleration = req->r_acceleration;
+    res->result = SetARCParams(&params, req->is_queued, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+void GetARCParamsService(std::shared_ptr<ros2_dobot::srv::GetARCParams::Request> req, std::shared_ptr<ros2_dobot::srv::GetARCParams::Response> res)
+{
+    ARCParams params;
+
+    res->result = GetARCParams(&params);
+    if (res->result == DobotCommunicate_NoError) {
+        res->xyz_velocity = params.xyzVelocity;
+        res->r_velocity = params.rVelocity;
+        res->xyz_acceleration = params.xyzAcceleration;
+        res->r_acceleration = params.rAcceleration;
+    }
+
+}
+
+void SetARCCmdService(std::shared_ptr<ros2_dobot::srv::SetARCCmd::Request> req, std::shared_ptr<ros2_dobot::srv::SetARCCmd::Response> res)
+{
+    ARCCmd cmd;
+    uint64_t queued_cmd_index;
+
+    cmd.cirPoint.x = req->x1;
+    cmd.cirPoint.y = req->y1;
+    cmd.cirPoint.z = req->z1;
+    cmd.cirPoint.r = req->r1;
+    cmd.toPoint.x = req->x2;
+    cmd.toPoint.y = req->y2;
+    cmd.toPoint.z = req->z2;
+    cmd.toPoint.r = req->r2;
+
+    res->result = SetARCCmd(&cmd, true, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+/*
+ * WAIT
+ */
+#include "ros2_dobot/srv/set_wait_cmd.hpp"
+
+void SetWAITCmdService(std::shared_ptr<ros2_dobot::srv::SetWAITCmd::Request> req, std::shared_ptr<ros2_dobot::srv::SetWAITCmd::Response> res)
+{
+    WAITCmd cmd;
+    uint64_t queued_cmd_index;
+
+    cmd.timeout = req->timeout;
+    res->result = SetWAITCmd(&cmd, true, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+/*
+ * TRIG
+ */
+#include "ros2_dobot/srv/set_trig_cmd.hpp"
+
+void SetTRIGCmdService(std::shared_ptr<ros2_dobot::srv::SetTRIGCmd::Request> req, std::shared_ptr<ros2_dobot::srv::SetTRIGCmd::Response> res)
+{
+    TRIGCmd cmd;
+    uint64_t queued_cmd_index;
+
+    cmd.address = req->address;
+    cmd.mode = req->mode;
+    cmd.condition = req->condition;
+    cmd.threshold = req->threshold;
+    res->result = SetTRIGCmd(&cmd, true, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+/*
+ * EIO
+ */
+#include "ros2_dobot/srv/set_io_multiplexing.hpp"
+#include "ros2_dobot/srv/get_io_multiplexing.hpp"
+#include "ros2_dobot/srv/set_iodo.hpp"
+#include "ros2_dobot/srv/get_iodo.hpp"
+#include "ros2_dobot/srv/set_iopwm.hpp"
+#include "ros2_dobot/srv/get_iopwm.hpp"
+#include "ros2_dobot/srv/get_iodi.hpp"
+#include "ros2_dobot/srv/get_ioadc.hpp"
+#include "ros2_dobot/srv/set_e_motor.hpp"
+#include "ros2_dobot/srv/set_infrared_sensor.hpp"
+#include "ros2_dobot/srv/get_infrared_sensor.hpp"
+#include "ros2_dobot/srv/set_color_sensor.hpp"
+#include "ros2_dobot/srv/get_color_sensor.hpp"
+
+void SetIOMultiplexingService(std::shared_ptr<ros2_dobot::srv::SetIOMultiplexing::Request> req, std::shared_ptr<ros2_dobot::srv::SetIOMultiplexing::Response> res)
+{
+    IOMultiplexing ioMultiplexing;
+    uint64_t queued_cmd_index;
+
+    ioMultiplexing.address = req->address;
+    ioMultiplexing.multiplex = req->multiplex;
+    res->result = SetIOMultiplexing(&ioMultiplexing, req->is_queued, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+void GetIOMultiplexingService(std::shared_ptr<ros2_dobot::srv::GetIOMultiplexing::Request> req, std::shared_ptr<ros2_dobot::srv::GetIOMultiplexing::Response> res)
+{
+    IOMultiplexing ioMultiplexing;
+
+    ioMultiplexing.address = req->address;
+    res->result = GetIOMultiplexing(&ioMultiplexing);
+    if (res->result == DobotCommunicate_NoError) {
+        res->multiplex = ioMultiplexing.multiplex;
+    }
+
+}
+
+void SetIODOService(std::shared_ptr<ros2_dobot::srv::SetIODO::Request> req, std::shared_ptr<ros2_dobot::srv::SetIODO::Response> res)
+{
+    IODO ioDO;
+    uint64_t queued_cmd_index;
+
+    ioDO.address = req->address;
+    ioDO.level = req->level;
+    res->result = SetIODO(&ioDO, req->is_queued, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+void GetIODOService(std::shared_ptr<ros2_dobot::srv::GetIODO::Request> req, std::shared_ptr<ros2_dobot::srv::GetIODO::Response> res)
+{
+    IODO ioDO;
+
+    ioDO.address = req->address;
+    res->result = GetIODO(&ioDO);
+    if (res->result == DobotCommunicate_NoError) {
+        res->level = ioDO.level;
+    }
+
+}
+
+void SetIOPWMService(std::shared_ptr<ros2_dobot::srv::SetIOPWM::Request> req, std::shared_ptr<ros2_dobot::srv::SetIOPWM::Response> res)
+{
+    IOPWM ioPWM;
+    uint64_t queued_cmd_index;
+
+    ioPWM.address = req->address;
+    ioPWM.frequency = req->frequency;
+    ioPWM.dutyCycle = req->duty_cycle;
+    res->result = SetIOPWM(&ioPWM, req->is_queued, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
+
+void GetIOPWMService(std::shared_ptr<ros2_dobot::srv::GetIOPWM::Request> req, std::shared_ptr<ros2_dobot::srv::GetIOPWM::Response> res)
+{
+    IOPWM ioPWM;
+
+    ioPWM.address = req->address;
+    res->result = GetIOPWM(&ioPWM);
+    if (res->result == DobotCommunicate_NoError) {
+        res->frequency = ioPWM.frequency;
+        res->duty_cycle = ioPWM.dutyCycle;
+    }
+
+}
+
+void GetIODIService(std::shared_ptr<ros2_dobot::srv::GetIODI::Request> req, std::shared_ptr<ros2_dobot::srv::GetIODI::Response> res)
+{
+    IODI ioDI;
+
+    ioDI.address = req->address;
+    res->result = GetIODI(&ioDI);
+    if (res->result == DobotCommunicate_NoError) {
+        res->level = ioDI.level;
+    }
+
+}
+
+void GetIOADCService(std::shared_ptr<ros2_dobot::srv::GetIOADC::Request> req, std::shared_ptr<ros2_dobot::srv::GetIOADC::Response> res)
+{
+    IOADC ioADC;
+
+    ioADC.address = req->address;
+    res->result = GetIOADC(&ioADC);
+    if (res->result == DobotCommunicate_NoError) {
+        res->value = ioADC.value;
+    }
+
+}
+
+void SetEMotorService(std::shared_ptr<ros2_dobot::srv::SetEMotor::Request> req, std::shared_ptr<ros2_dobot::srv::SetEMotor::Response> res)
+{
+    EMotor eMotor;
+    uint64_t queued_cmd_index;
+
+    eMotor.index = req->index;
+    eMotor.isEnabled = req->is_enabled;
+    eMotor.speed = req->speed;
+    res->result = SetEMotor(&eMotor, req->is_queued, &queued_cmd_index);
+    if (res->result == DobotCommunicate_NoError) {
+        res->queued_cmd_index = queued_cmd_index;
+    }
+
+}
 
 
+void SetInfraredSensorService(std::shared_ptr<ros2_dobot::srv::SetInfraredSensor::Request> req, std::shared_ptr<ros2_dobot::srv::SetInfraredSensor::Response> res)
+{
+    InfraredPort infrared_port = InfraredPort(req->infrared_port);
+    res->result = SetInfraredSensor(req->enable_ctrl, infrared_port, 0);
+
+}
+
+void GetInfraredSensorService(std::shared_ptr<ros2_dobot::srv::GetInfraredSensor::Request> req, std::shared_ptr<ros2_dobot::srv::GetInfraredSensor::Response> res)
+{
+    uint8_t value;
+    InfraredPort infrared_port = InfraredPort(req->infrared_port);
+    res->result = GetInfraredSensor(infrared_port, &value);
+    if (res->result == DobotCommunicate_NoError) {
+        res->value = value;
+    }
+
+}
+
+void SetColorSensorService(std::shared_ptr<ros2_dobot::srv::SetColorSensor::Request> req, std::shared_ptr<ros2_dobot::srv::SetColorSensor::Response> res)
+{
+    ColorPort color_port = ColorPort(req->color_port);
+    res->result = SetColorSensor(req->enable_ctrl, color_port, 0);
+
+}
+
+void GetColorSensorService(std::shared_ptr<ros2_dobot::srv::GetColorSensor::Request> req, std::shared_ptr<ros2_dobot::srv::GetColorSensor::Response> res)
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    res->result = GetColorSensor(&r, &g, &b);
+    if (res->result == DobotCommunicate_NoError) {
+        res->r = r;
+        res->g = g;
+        res->b = b;
+    }
+
+}
 
 /**
  * Create services
@@ -486,10 +804,42 @@ void CreateServices(std::shared_ptr<rclcpp::Node> node) {
     node->create_service<ros2_dobot::srv::SetPTPCoordinateParams>("/DobotServer/SetPTPCoordinateParams", &SetPTPCoordinateParamsService);
     node->create_service<ros2_dobot::srv::GetPTPCoordinateParams>("/DobotServer/GetPTPCoordinateParams", &GetPTPCoordinateParamsService);
     node->create_service<ros2_dobot::srv::SetPTPJumpParams>("/DobotServer/SetPTPJumpParams", &SetPTPJumpParamsService);
-    node->create_service<ros2_dobot::srv::GetPTPJumpParams>("/DobotServer/GetPTPJumpParams", GetPTPJumpParamsService);
-    node->create_service<ros2_dobot::srv::SetPTPCommonParams>("/DobotServer/SetPTPCommonParams", SetPTPCommonParamsService);
-    node->create_service<ros2_dobot::srv::GetPTPCommonParams>("/DobotServer/GetPTPCommonParams", GetPTPCommonParamsService);
-    node->create_service<ros2_dobot::srv::SetPTPCmd>("/DobotServer/SetPTPCmd", SetPTPCmdService);
+    node->create_service<ros2_dobot::srv::GetPTPJumpParams>("/DobotServer/GetPTPJumpParams", &GetPTPJumpParamsService);
+    node->create_service<ros2_dobot::srv::SetPTPCommonParams>("/DobotServer/SetPTPCommonParams", &SetPTPCommonParamsService);
+    node->create_service<ros2_dobot::srv::GetPTPCommonParams>("/DobotServer/GetPTPCommonParams", &GetPTPCommonParamsService);
+    node->create_service<ros2_dobot::srv::SetPTPCmd>("/DobotServer/SetPTPCmd", &SetPTPCmdService);
+
+    // CP Services
+    node->create_service<ros2_dobot::srv::SetCPParams>("/DobotServer/SetCPParams", &SetCPParamsService);
+    node->create_service<ros2_dobot::srv::GetCPParams>("/DobotServer/GetCPParams", &GetCPParamsService);
+    node->create_service<ros2_dobot::srv::SetCPCmd>("/DobotServer/SetCPCmd", &SetCPCmdService);
+
+    // ARC Service
+    node->create_service<ros2_dobot::srv::SetARCParams>("/DobotServer/SetARCParams", &SetARCParamsService);
+    node->create_service<ros2_dobot::srv::GetARCParams>("/DobotServer/GetARCParams", &GetARCParamsService);
+    node->create_service<ros2_dobot::srv::SetARCCmd>("/DobotServer/SetARCCmd", &SetARCCmdService);
+
+    // WAIT services
+        node->create_service<ros2_dobot::srv::SetWAITCmd>("/DobotServer/SetWAITCmd", &SetWAITCmdService);
+
+    // TRIG Services
+        node->create_service<ros2_dobot::srv::SetTRIGCmd>("/DobotServer/SetTRIGCmd", &SetTRIGCmdService);
+
+    // EIO Services
+    node->create_service<ros2_dobot::srv::SetIOMultiplexing>("/DobotServer/SetIOMultiplexing", &SetIOMultiplexingService);
+    node->create_service<ros2_dobot::srv::GetIOMultiplexing>("/DobotServer/GetIOMultiplexing", &GetIOMultiplexingService);
+    node->create_service<ros2_dobot::srv::SetIODO>("/DobotServer/SetIODO", &SetIODOService);
+    node->create_service<ros2_dobot::srv::GetIODO>("/DobotServer/GetIODO", &GetIODOService);
+    node->create_service<ros2_dobot::srv::SetIOPWM>("/DobotServer/SetIOPWM", &SetIOPWMService);
+    node->create_service<ros2_dobot::srv::GetIOPWM>("/DobotServer/GetIOPWM", &GetIOPWMService);
+    node->create_service<ros2_dobot::srv::GetIODI>("/DobotServer/GetIODI", &GetIODIService);
+    node->create_service<ros2_dobot::srv::GetIOADC>("/DobotServer/GetIOADC", &GetIOADCService);
+    node->create_service<ros2_dobot::srv::SetEMotor>("/DobotServer/SetEMotor", &SetEMotorService);
+    node->create_service<ros2_dobot::srv::SetInfraredSensor>("/DobotServer/SetInfraredSensor", &SetInfraredSensorService);
+    node->create_service<ros2_dobot::srv::GetInfraredSensor>("/DobotServer/GetInfraredSensor", &GetInfraredSensorService);
+    node->create_service<ros2_dobot::srv::SetColorSensor>("/DobotServer/SetColorSensor", &SetColorSensorService);
+    node->create_service<ros2_dobot::srv::GetColorSensor>("/DobotServer/GetColorSensor", &GetColorSensorService);
+
 
 }
 
