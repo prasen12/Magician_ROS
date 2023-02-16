@@ -1,5 +1,7 @@
 # <center>Magician Robot</center>
 
-Chinese version of the README -> please [click here](./README-CN.md)
+ROS-controlled  Dobot Magician demo.
 
-Dobot Magician uses ROS-controlled Demo under Linux system. This Demo does not depend on serial, and automatically adapts to x86 and x64. This demo uses ubuntu16.04 X64 system, and ROS version of ROS Kinetic Kame
+This fork adds support for ROS2 and Unbuntu 22.04 on x86_64 and aarch64 (Raspberry Pi support). 
+
+This version requires Humble Hawksbill release of ROS2
