@@ -1,0 +1,8 @@
+float32 plan_acc
+float32 junction_vel
+float32 acc
+uint8 real_time_track
+bool is_queued
+---
+int32 result
+uint64 queued_cmd_index

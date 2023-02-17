@@ -1,0 +1,6 @@
+uint8 enable_ctrl
+uint8 on
+bool is_queued
+---
+int32 result
+uint64 queued_cmd_index

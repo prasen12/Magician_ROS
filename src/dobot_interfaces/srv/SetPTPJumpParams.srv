@@ -1,0 +1,6 @@
+float32 jump_height
+float32 z_limit
+bool is_queued
+---
+int32 result
+uint64 queued_cmd_index

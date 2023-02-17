@@ -1,0 +1,5 @@
+int32 infrared_port
+---
+int32 result
+uint8 value
+
