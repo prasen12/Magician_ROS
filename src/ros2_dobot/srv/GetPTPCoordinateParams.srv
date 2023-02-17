@@ -1,6 +1,0 @@
----
-int32 result
-float32 xyz_velocity
-float32 r_velocity
-float32 xyz_acceleration
-float32 r_acceleration

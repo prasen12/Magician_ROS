@@ -1,5 +1,0 @@
----
-int32 result
-float32 x_bias
-float32 y_bias
-float32 z_bias

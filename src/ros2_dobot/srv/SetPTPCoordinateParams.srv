@@ -1,8 +1,0 @@
-float32 xyz_velocity
-float32 r_velocity
-float32 xyz_acceleration
-float32 r_acceleration
-bool is_queued
----
-int32 result
-uint64 queued_cmd_index

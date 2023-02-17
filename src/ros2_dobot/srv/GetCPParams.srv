@@ -1,6 +1,0 @@
----
-int32 result
-float32 plan_acc
-float32 junction_vel
-float32 acc
-uint8 real_time_track

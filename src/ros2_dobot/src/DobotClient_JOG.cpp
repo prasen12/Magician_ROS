@@ -1,7 +1,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
-#include "ros2_dobot/srv/set_cmd_timeout.hpp"
-#include "ros2_dobot/srv/set_jog_cmd.hpp"
+#include "dobot_interfaces/srv/set_cmd_timeout.hpp"
+#include "dobot_interfaces/srv/set_jog_cmd.hpp"
 #include <cstdlib>
 
 #include <termios.h>
@@ -47,8 +47,8 @@ void keyboardLoop(std::shared_ptr<rclcpp::Node> node)
     struct pollfd ufd;
     ufd.fd = kfd;
     ufd.events = POLLIN;
-    auto setJOGCmdRequest = std::make_shared<ros2_dobot::srv::SetJOGCmd::Request>();   
-    auto setJOGCmdClient = node->create_client<ros2_dobot::srv::SetJOGCmd>("/DobotServer/SetJOGCmd");
+    auto setJOGCmdRequest = std::make_shared<dobot_interfaces::srv::SetJOGCmd::Request>();   
+    auto setJOGCmdClient = node->create_client<dobot_interfaces::srv::SetJOGCmd>("/DobotServer/SetJOGCmd");
     setJOGCmdRequest->is_joint = false;
     for (;;)
     {
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
     std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("DobotClient_JOG");
     auto logger = rclcpp::get_logger("DobotClient_JOG");
     RCLCPP_INFO(logger, "Connecting to DobotServer node ...");
-    auto setCmdTimeoutclient = node->create_client<ros2_dobot::srv::SetCmdTimeout>("/DobotServer/SetCmdTimeout");
+    auto setCmdTimeoutclient = node->create_client<dobot_interfaces::srv::SetCmdTimeout>("/DobotServer/SetCmdTimeout");
     while (!setCmdTimeoutclient->wait_for_service(std::chrono::seconds(10)))
     {
         if (!rclcpp::ok())
@@ -143,7 +143,7 @@ int main(int argc, char **argv)
         RCLCPP_INFO(logger, "Service not available, waiting ...");
     }
 
-    auto setCmdTimeoutRequest = std::make_shared<ros2_dobot::srv::SetCmdTimeout::Request>();
+    auto setCmdTimeoutRequest = std::make_shared<dobot_interfaces::srv::SetCmdTimeout::Request>();
     setCmdTimeoutRequest->timeout = 3000;
     setCmdTimeoutclient->async_send_request(setCmdTimeoutRequest);
 
