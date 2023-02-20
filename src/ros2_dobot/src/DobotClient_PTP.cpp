@@ -85,7 +85,6 @@ int main(int argc, char **argv)
     setPTPCoordinateParamsRequest->r_acceleration = 100;
     node->create_client<dobot_interfaces::srv::SetPTPCoordinateParams>("/DobotServer/SetPTPCoordinateParams")->async_send_request(setPTPCoordinateParamsRequest);
 
-
     // Set PTP jump parameters
     auto setPTPJumpParamsRequest = std::make_shared<dobot_interfaces::srv::SetPTPJumpParams::Request>();
     setPTPJumpParamsRequest->jump_height = 20;
@@ -98,57 +97,54 @@ int main(int argc, char **argv)
     setPTPCommonParamsRequest->acceleration_ratio = 50;
     node->create_client<dobot_interfaces::srv::SetPTPCommonParams>("/DobotServer/SetPTPCommonParams")->async_send_request(setPTPCommonParamsRequest);
 
-
     auto setPTPCmdRequest = std::make_shared<dobot_interfaces::srv::SetPTPCmd::Request>();
     auto setPTPCmdClient = node->create_client<dobot_interfaces::srv::SetPTPCmd>("/DobotServer/SetPTPCmd");
 
     while (rclcpp::ok())
     {
+        RCLCPP_INFO(logger, "Moving the arm ..");
         // The first point
         do
         {
+            RCLCPP_INFO(logger, "Moving to First point ..");
             setPTPCmdRequest->ptp_mode = 1;
             setPTPCmdRequest->x = 200;
             setPTPCmdRequest->y = 0;
             setPTPCmdRequest->z = 0;
             setPTPCmdRequest->r = 0;
             auto result = setPTPCmdClient->async_send_request(setPTPCmdRequest);
-            if (rclcpp::spin_until_future_complete(node, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                if (result.get()->result == 0) {
+            if (rclcpp::spin_until_future_complete(node, result) == rclcpp::FutureReturnCode::SUCCESS)
+            {
+                if (result.get()->result == 0)
+                {
                     break;
                 }
             }
-            // rclcpp::spin(node);
-            // ros::spinOnce();
-            // if (ros::ok() == false)
-            // {
-            //     break;
-            // }
         } while (1);
 
-        // The first point
+        // The second point
         do
         {
+            RCLCPP_INFO(logger, "Moving to Second point ..");
+
             setPTPCmdRequest->ptp_mode = 1;
             setPTPCmdRequest->x = 250;
             setPTPCmdRequest->y = 0;
             setPTPCmdRequest->z = 0;
             setPTPCmdRequest->r = 0;
             auto result = setPTPCmdClient->async_send_request(setPTPCmdRequest);
-            if (rclcpp::spin_until_future_complete(node, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                if (result.get()->result == 0) {
+            if (rclcpp::spin_until_future_complete(node, result) == rclcpp::FutureReturnCode::SUCCESS)
+            {
+                if (result.get()->result == 0)
+                {
                     break;
                 }
             }
-            // ros::spinOnce();
-            // if (ros::ok() == false)
-            // {
-            //     break;
-            // }
         } while (1);
-
-        rclcpp::spin(node);
+        RCLCPP_INFO(logger, "Waiting for requests to complete ..");
+        rclcpp::spin_some(node);
+        rclcpp::shutdown();
+        RCLCPP_INFO(logger, "Done!");
     }
-
     return 0;
 }
