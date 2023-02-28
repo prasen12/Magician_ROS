@@ -1,10 +1,9 @@
+#include <iostream>
 #include "rclcpp/rclcpp.hpp"
 
 #include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
-
 #include <memory>
-
 #include "DobotDll.h"
 
 
@@ -827,84 +826,84 @@ rclcpp::Service<dobot_interfaces::srv::SetWAITCmd>::SharedPtr SetWAITCmd;
 /**
  * Create services
  */
- void CreateServices(std::shared_ptr<rclcpp::Node> node, std::shared_ptr<ServiceInstances> serviceInstances) {
+ void CreateServices(std::shared_ptr<rclcpp::Node> node, std::shared_ptr<ServiceInstances> serviceInstances, std::string nameSpace) {
     // ServiceInstances serviceInstances;
-    serviceInstances->SetCmdTimeout = node->create_service<dobot_interfaces::srv::SetCmdTimeout>("/DobotServer/SetCmdTimeout", &SetCmdTimeoutService);
+    serviceInstances->SetCmdTimeout = node->create_service<dobot_interfaces::srv::SetCmdTimeout>("/" + nameSpace + "/SetCmdTimeout", &SetCmdTimeoutService);
 
     // Device Information Services
-    serviceInstances->GetDeviceSN = node->create_service<dobot_interfaces::srv::GetDeviceSN>("/DobotServer/GetDeviceSN", &GetDeviceSNService);
-    serviceInstances->SetDeviceName = node->create_service<dobot_interfaces::srv::SetDeviceName>("/DobotServer/SetDeviceName", &SetDeviceNameService);
-    serviceInstances->GetDeviceName  = node->create_service<dobot_interfaces::srv::GetDeviceName>("/DobotServer/GetDeviceName", &GetDeviceNameService);
-    serviceInstances->GetDeviceVersion  = node->create_service<dobot_interfaces::srv::GetDeviceVersion>("/DobotServer/GetDeviceVersion", &GetDeviceVersionService);
+    serviceInstances->GetDeviceSN = node->create_service<dobot_interfaces::srv::GetDeviceSN>("/" + nameSpace + "/GetDeviceSN", &GetDeviceSNService);
+    serviceInstances->SetDeviceName = node->create_service<dobot_interfaces::srv::SetDeviceName>("/" + nameSpace + "/SetDeviceName", &SetDeviceNameService);
+    serviceInstances->GetDeviceName  = node->create_service<dobot_interfaces::srv::GetDeviceName>("/" + nameSpace + "/GetDeviceName", &GetDeviceNameService);
+    serviceInstances->GetDeviceVersion  = node->create_service<dobot_interfaces::srv::GetDeviceVersion>("/" + nameSpace + "/GetDeviceVersion", &GetDeviceVersionService);
 
 
     // Alarm Services
-    serviceInstances->GetAlarmsState  = node->create_service<dobot_interfaces::srv::GetAlarmsState>("/DobotServer/GetAlarmsState", &GetAlarmsStateService);
-    serviceInstances->ClearAllAlarmsState  = node->create_service<dobot_interfaces::srv::ClearAllAlarmsState>("/DobotServer/ClearAllAlarmsState", &ClearAllAlarmsStateService);
+    serviceInstances->GetAlarmsState  = node->create_service<dobot_interfaces::srv::GetAlarmsState>("/" + nameSpace + "/GetAlarmsState", &GetAlarmsStateService);
+    serviceInstances->ClearAllAlarmsState  = node->create_service<dobot_interfaces::srv::ClearAllAlarmsState>("/" + nameSpace + "/ClearAllAlarmsState", &ClearAllAlarmsStateService);
 
     // Pose Services
-    serviceInstances->GetPose  = node->create_service<dobot_interfaces::srv::GetPose>("/DobotServer/GetPoseService", &GetPoseService);
-    serviceInstances->SetHOMEParams  = node->create_service<dobot_interfaces::srv::SetHOMEParams>("/DobotServer/SetHOMEParams", &SetHOMEParamsService);
-    serviceInstances->GetHOMEParams  = node->create_service<dobot_interfaces::srv::GetHOMEParams>("/DobotServer/GetHOMEParams", &GetHOMEParamsService);
-    serviceInstances->SetHOMECmd  = node->create_service<dobot_interfaces::srv::SetHOMECmd>("/DobotServer/SetHOMECmd", &SetHOMECmdService);
+    serviceInstances->GetPose  = node->create_service<dobot_interfaces::srv::GetPose>("/" + nameSpace + "/GetPoseService", &GetPoseService);
+    serviceInstances->SetHOMEParams  = node->create_service<dobot_interfaces::srv::SetHOMEParams>("/" + nameSpace + "/SetHOMEParams", &SetHOMEParamsService);
+    serviceInstances->GetHOMEParams  = node->create_service<dobot_interfaces::srv::GetHOMEParams>("/" + nameSpace + "/GetHOMEParams", &GetHOMEParamsService);
+    serviceInstances->SetHOMECmd  = node->create_service<dobot_interfaces::srv::SetHOMECmd>("/" + nameSpace + "/SetHOMECmd", &SetHOMECmdService);
 
     // Queue Command Services
-    serviceInstances->SetQueuedCmdClear  = node->create_service<dobot_interfaces::srv::SetQueuedCmdClear>("/DobotServer/SetQueuedCmdClear", &SetQueuedCmdClearService);
-    serviceInstances->SetQueuedCmdStartExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdStartExec>("/DobotServer/SetQueuedCmdStartExec", &SetQueuedCmdStartExecService);
-    serviceInstances->SetQueuedCmdStopExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdStopExec>("/DobotServer/SetQueuedCmdStopExecService", &SetQueuedCmdStopExecService);
-    serviceInstances->SetQueuedCmdForceStopExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdForceStopExec>("/DobotServer/SetQueuedCmdForceStopExecService", &SetQueuedCmdForceStopExecService);
+    serviceInstances->SetQueuedCmdClear  = node->create_service<dobot_interfaces::srv::SetQueuedCmdClear>("/" + nameSpace + "/SetQueuedCmdClear", &SetQueuedCmdClearService);
+    serviceInstances->SetQueuedCmdStartExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdStartExec>("/" + nameSpace + "/SetQueuedCmdStartExec", &SetQueuedCmdStartExecService);
+    serviceInstances->SetQueuedCmdStopExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdStopExec>("/" + nameSpace + "/SetQueuedCmdStopExecService", &SetQueuedCmdStopExecService);
+    serviceInstances->SetQueuedCmdForceStopExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdForceStopExec>("/" + nameSpace + "/SetQueuedCmdForceStopExecService", &SetQueuedCmdForceStopExecService);
 
     // End Effector Services
-    serviceInstances->SetEndEffectorParams  = node->create_service<dobot_interfaces::srv::SetEndEffectorParams>("/DobotServer/SetEndEffectorParams", &SetEndEffectorParamsService);
-    serviceInstances->GetEndEffectorParams  = node->create_service<dobot_interfaces::srv::GetEndEffectorParams>("/DobotServer/GetEndEffectorParams", &GetEndEffectorParamsService);
-    serviceInstances->SetEndEffectorLaser  = node->create_service<dobot_interfaces::srv::SetEndEffectorLaser>("/DobotServer/SetEndEffectorLaser", &SetEndEffectorLaserService);
-    serviceInstances->GetEndEffectorLaser  = node->create_service<dobot_interfaces::srv::GetEndEffectorLaser>("/DobotServer/GetEndEffectorLaser", &GetEndEffectorLaserService);
-    serviceInstances->SetEndEffectorSuctionCup  = node->create_service<dobot_interfaces::srv::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup", &SetEndEffectorSuctionCupService);
-    serviceInstances->GetEndEffectorSuctionCup  = node->create_service<dobot_interfaces::srv::GetEndEffectorSuctionCup>("/DobotServer/GetEndEffectorSuctionCup", &GetEndEffectorSuctionCupService);
-    serviceInstances->SetEndEffectorGripper  = node->create_service<dobot_interfaces::srv::SetEndEffectorGripper>("/DobotServer/SetEndEffectorGripper", &SetEndEffectorGripperService);
-    serviceInstances->GetEndEffectorGripper  = node->create_service<dobot_interfaces::srv::GetEndEffectorGripper>("/DobotServer/GetEndEffectorGripper", &GetEndEffectorGripperService);
+    serviceInstances->SetEndEffectorParams  = node->create_service<dobot_interfaces::srv::SetEndEffectorParams>("/" + nameSpace + "/SetEndEffectorParams", &SetEndEffectorParamsService);
+    serviceInstances->GetEndEffectorParams  = node->create_service<dobot_interfaces::srv::GetEndEffectorParams>("/" + nameSpace + "/GetEndEffectorParams", &GetEndEffectorParamsService);
+    serviceInstances->SetEndEffectorLaser  = node->create_service<dobot_interfaces::srv::SetEndEffectorLaser>("/" + nameSpace + "/SetEndEffectorLaser", &SetEndEffectorLaserService);
+    serviceInstances->GetEndEffectorLaser  = node->create_service<dobot_interfaces::srv::GetEndEffectorLaser>("/" + nameSpace + "/GetEndEffectorLaser", &GetEndEffectorLaserService);
+    serviceInstances->SetEndEffectorSuctionCup  = node->create_service<dobot_interfaces::srv::SetEndEffectorSuctionCup>("/" + nameSpace + "/SetEndEffectorSuctionCup", &SetEndEffectorSuctionCupService);
+    serviceInstances->GetEndEffectorSuctionCup  = node->create_service<dobot_interfaces::srv::GetEndEffectorSuctionCup>("/" + nameSpace + "/GetEndEffectorSuctionCup", &GetEndEffectorSuctionCupService);
+    serviceInstances->SetEndEffectorGripper  = node->create_service<dobot_interfaces::srv::SetEndEffectorGripper>("/" + nameSpace + "/SetEndEffectorGripper", &SetEndEffectorGripperService);
+    serviceInstances->GetEndEffectorGripper  = node->create_service<dobot_interfaces::srv::GetEndEffectorGripper>("/" + nameSpace + "/GetEndEffectorGripper", &GetEndEffectorGripperService);
 
     // PTP Services
-    serviceInstances->SetPTPJointParams  = node->create_service<dobot_interfaces::srv::SetPTPJointParams>("/DobotServer/SetPTPJointParams", &SetPTPJointParamsService);
-    serviceInstances->GetPTPJointParams  = node->create_service<dobot_interfaces::srv::GetPTPJointParams>("/DobotServer/GetPTPJointParams", &GetPTPJointParamsService);
-    serviceInstances->SetPTPCoordinateParams  = node->create_service<dobot_interfaces::srv::SetPTPCoordinateParams>("/DobotServer/SetPTPCoordinateParams", &SetPTPCoordinateParamsService);
-    serviceInstances->GetPTPCoordinateParams  = node->create_service<dobot_interfaces::srv::GetPTPCoordinateParams>("/DobotServer/GetPTPCoordinateParams", &GetPTPCoordinateParamsService);
-    serviceInstances->SetPTPJumpParams  = node->create_service<dobot_interfaces::srv::SetPTPJumpParams>("/DobotServer/SetPTPJumpParams", &SetPTPJumpParamsService);
-    serviceInstances->GetPTPJumpParams  = node->create_service<dobot_interfaces::srv::GetPTPJumpParams>("/DobotServer/GetPTPJumpParams", &GetPTPJumpParamsService);
-    serviceInstances->SetPTPCommonParams  = node->create_service<dobot_interfaces::srv::SetPTPCommonParams>("/DobotServer/SetPTPCommonParams", &SetPTPCommonParamsService);
-    serviceInstances->GetPTPCommonParams  = node->create_service<dobot_interfaces::srv::GetPTPCommonParams>("/DobotServer/GetPTPCommonParams", &GetPTPCommonParamsService);
-    serviceInstances->SetPTPCmd  = node->create_service<dobot_interfaces::srv::SetPTPCmd>("/DobotServer/SetPTPCmd", &SetPTPCmdService);
+    serviceInstances->SetPTPJointParams  = node->create_service<dobot_interfaces::srv::SetPTPJointParams>("/" + nameSpace + "/SetPTPJointParams", &SetPTPJointParamsService);
+    serviceInstances->GetPTPJointParams  = node->create_service<dobot_interfaces::srv::GetPTPJointParams>("/" + nameSpace + "/GetPTPJointParams", &GetPTPJointParamsService);
+    serviceInstances->SetPTPCoordinateParams  = node->create_service<dobot_interfaces::srv::SetPTPCoordinateParams>("/" + nameSpace + "/SetPTPCoordinateParams", &SetPTPCoordinateParamsService);
+    serviceInstances->GetPTPCoordinateParams  = node->create_service<dobot_interfaces::srv::GetPTPCoordinateParams>("/" + nameSpace + "/GetPTPCoordinateParams", &GetPTPCoordinateParamsService);
+    serviceInstances->SetPTPJumpParams  = node->create_service<dobot_interfaces::srv::SetPTPJumpParams>("/" + nameSpace + "/SetPTPJumpParams", &SetPTPJumpParamsService);
+    serviceInstances->GetPTPJumpParams  = node->create_service<dobot_interfaces::srv::GetPTPJumpParams>("/" + nameSpace + "/GetPTPJumpParams", &GetPTPJumpParamsService);
+    serviceInstances->SetPTPCommonParams  = node->create_service<dobot_interfaces::srv::SetPTPCommonParams>("/" + nameSpace + "/SetPTPCommonParams", &SetPTPCommonParamsService);
+    serviceInstances->GetPTPCommonParams  = node->create_service<dobot_interfaces::srv::GetPTPCommonParams>("/" + nameSpace + "/GetPTPCommonParams", &GetPTPCommonParamsService);
+    serviceInstances->SetPTPCmd  = node->create_service<dobot_interfaces::srv::SetPTPCmd>("/" + nameSpace + "/SetPTPCmd", &SetPTPCmdService);
 
     // CP Services
-    serviceInstances->SetCPParams  = node->create_service<dobot_interfaces::srv::SetCPParams>("/DobotServer/SetCPParams", &SetCPParamsService);
-    serviceInstances->GetCPParams  = node->create_service<dobot_interfaces::srv::GetCPParams>("/DobotServer/GetCPParams", &GetCPParamsService);
-    serviceInstances->SetCPCmd  = node->create_service<dobot_interfaces::srv::SetCPCmd>("/DobotServer/SetCPCmd", &SetCPCmdService);
+    serviceInstances->SetCPParams  = node->create_service<dobot_interfaces::srv::SetCPParams>("/" + nameSpace + "/SetCPParams", &SetCPParamsService);
+    serviceInstances->GetCPParams  = node->create_service<dobot_interfaces::srv::GetCPParams>("/" + nameSpace + "/GetCPParams", &GetCPParamsService);
+    serviceInstances->SetCPCmd  = node->create_service<dobot_interfaces::srv::SetCPCmd>("/" + nameSpace + "/SetCPCmd", &SetCPCmdService);
 
     // ARC Service
-    serviceInstances->SetARCParams  = node->create_service<dobot_interfaces::srv::SetARCParams>("/DobotServer/SetARCParams", &SetARCParamsService);
-    serviceInstances->GetARCParams  = node->create_service<dobot_interfaces::srv::GetARCParams>("/DobotServer/GetARCParams", &GetARCParamsService);
-    serviceInstances->SetARCCmd  = node->create_service<dobot_interfaces::srv::SetARCCmd>("/DobotServer/SetARCCmd", &SetARCCmdService);
+    serviceInstances->SetARCParams  = node->create_service<dobot_interfaces::srv::SetARCParams>("/" + nameSpace + "/SetARCParams", &SetARCParamsService);
+    serviceInstances->GetARCParams  = node->create_service<dobot_interfaces::srv::GetARCParams>("/" + nameSpace + "/GetARCParams", &GetARCParamsService);
+    serviceInstances->SetARCCmd  = node->create_service<dobot_interfaces::srv::SetARCCmd>("/" + nameSpace + "/SetARCCmd", &SetARCCmdService);
 
     // WAIT services
-        serviceInstances->SetWAITCmd  = node->create_service<dobot_interfaces::srv::SetWAITCmd>("/DobotServer/SetWAITCmd", &SetWAITCmdService);
+        serviceInstances->SetWAITCmd  = node->create_service<dobot_interfaces::srv::SetWAITCmd>("/" + nameSpace + "/SetWAITCmd", &SetWAITCmdService);
 
     // TRIG Services
-        serviceInstances->SetTRIGCmd  = node->create_service<dobot_interfaces::srv::SetTRIGCmd>("/DobotServer/SetTRIGCmd", &SetTRIGCmdService);
+        serviceInstances->SetTRIGCmd  = node->create_service<dobot_interfaces::srv::SetTRIGCmd>("/" + nameSpace + "/SetTRIGCmd", &SetTRIGCmdService);
 
     // EIO Services
-    serviceInstances->SetIOMultiplexing  = node->create_service<dobot_interfaces::srv::SetIOMultiplexing>("/DobotServer/SetIOMultiplexing", &SetIOMultiplexingService);
-    serviceInstances->GetIOMultiplexing  = node->create_service<dobot_interfaces::srv::GetIOMultiplexing>("/DobotServer/GetIOMultiplexing", &GetIOMultiplexingService);
-    serviceInstances->SetIODO  = node->create_service<dobot_interfaces::srv::SetIODO>("/DobotServer/SetIODO", &SetIODOService);
-    serviceInstances->GetIODO  = node->create_service<dobot_interfaces::srv::GetIODO>("/DobotServer/GetIODO", &GetIODOService);
-    serviceInstances->SetIOPWM  = node->create_service<dobot_interfaces::srv::SetIOPWM>("/DobotServer/SetIOPWM", &SetIOPWMService);
-    serviceInstances->GetIOPWM  = node->create_service<dobot_interfaces::srv::GetIOPWM>("/DobotServer/GetIOPWM", &GetIOPWMService);
-    serviceInstances->GetIODI  = node->create_service<dobot_interfaces::srv::GetIODI>("/DobotServer/GetIODI", &GetIODIService);
-    serviceInstances->GetIOADC = node->create_service<dobot_interfaces::srv::GetIOADC>("/DobotServer/GetIOADC", &GetIOADCService);
-    serviceInstances->SetEMotor  = node->create_service<dobot_interfaces::srv::SetEMotor>("/DobotServer/SetEMotor", &SetEMotorService);
-    serviceInstances->SetInfraredSensor  = node->create_service<dobot_interfaces::srv::SetInfraredSensor>("/DobotServer/SetInfraredSensor", &SetInfraredSensorService);
-    serviceInstances->GetInfraredSensor  = node->create_service<dobot_interfaces::srv::GetInfraredSensor>("/DobotServer/GetInfraredSensor", &GetInfraredSensorService);
-    serviceInstances->SetColorSensor  = node->create_service<dobot_interfaces::srv::SetColorSensor>("/DobotServer/SetColorSensor", &SetColorSensorService);
-    serviceInstances->GetColorSensor = node->create_service<dobot_interfaces::srv::GetColorSensor>("/DobotServer/GetColorSensor", &GetColorSensorService);
+    serviceInstances->SetIOMultiplexing  = node->create_service<dobot_interfaces::srv::SetIOMultiplexing>("/" + nameSpace + "/SetIOMultiplexing", &SetIOMultiplexingService);
+    serviceInstances->GetIOMultiplexing  = node->create_service<dobot_interfaces::srv::GetIOMultiplexing>("/" + nameSpace + "/GetIOMultiplexing", &GetIOMultiplexingService);
+    serviceInstances->SetIODO  = node->create_service<dobot_interfaces::srv::SetIODO>("/" + nameSpace + "/SetIODO", &SetIODOService);
+    serviceInstances->GetIODO  = node->create_service<dobot_interfaces::srv::GetIODO>("/" + nameSpace + "/GetIODO", &GetIODOService);
+    serviceInstances->SetIOPWM  = node->create_service<dobot_interfaces::srv::SetIOPWM>("/" + nameSpace + "/SetIOPWM", &SetIOPWMService);
+    serviceInstances->GetIOPWM  = node->create_service<dobot_interfaces::srv::GetIOPWM>("/" + nameSpace + "/GetIOPWM", &GetIOPWMService);
+    serviceInstances->GetIODI  = node->create_service<dobot_interfaces::srv::GetIODI>("/" + nameSpace + "/GetIODI", &GetIODIService);
+    serviceInstances->GetIOADC = node->create_service<dobot_interfaces::srv::GetIOADC>("/" + nameSpace + "/GetIOADC", &GetIOADCService);
+    serviceInstances->SetEMotor  = node->create_service<dobot_interfaces::srv::SetEMotor>("/" + nameSpace + "/SetEMotor", &SetEMotorService);
+    serviceInstances->SetInfraredSensor  = node->create_service<dobot_interfaces::srv::SetInfraredSensor>("/" + nameSpace + "/SetInfraredSensor", &SetInfraredSensorService);
+    serviceInstances->GetInfraredSensor  = node->create_service<dobot_interfaces::srv::GetInfraredSensor>("/" + nameSpace + "/GetInfraredSensor", &GetInfraredSensorService);
+    serviceInstances->SetColorSensor  = node->create_service<dobot_interfaces::srv::SetColorSensor>("/" + nameSpace + "/SetColorSensor", &SetColorSensorService);
+    serviceInstances->GetColorSensor = node->create_service<dobot_interfaces::srv::GetColorSensor>("/" + nameSpace + "/GetColorSensor", &GetColorSensorService);
 
 
 }
@@ -915,33 +914,34 @@ rclcpp::Service<dobot_interfaces::srv::SetWAITCmd>::SharedPtr SetWAITCmd;
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared("DobotServer");
 
     if (argc < 2) {
-        RCLCPP_ERROR(node->get_logger(), "Usage:  <Application> <portName>");
+        std::cout << "Usage:  <portName> <node-name>" << std::endl;
         return -1;
     }
-    // Connect Dobot before start the service
+    std::shared_ptr<rclcpp::Node> node = rclcpp::Node::make_shared(argv[2], argv[2]);
+
     int result = ConnectDobot(argv[1], 115200, 0, 0, 0);
-    // switch (result) {
-    //     case DobotConnect_NoError:
-    //     break;
-    //     case DobotConnect_NotFound:
-    //         RCLCPP_ERROR(node->get_logger(), "Dobot not found!");
-    //         return -2;
-    //     break;
-    //     case DobotConnect_Occupied:
-    //         RCLCPP_ERROR(node->get_logger(), "Invalid port name or Dobot is being used by another application!");
-    //         return -3;
-    //     break;
-    //     default:
-    //     break;
-    // }
+    switch (result) {
+        case DobotConnect_NoError:
+        break;
+        case DobotConnect_NotFound:
+            RCLCPP_ERROR(node->get_logger(), "Dobot not found!");
+            return -2;
+        break;
+        case DobotConnect_Occupied:
+            RCLCPP_ERROR(node->get_logger(), "Invalid port name or Dobot is being used by another application!");
+            return -3;
+        break;
+        default:
+        break;
+    }
 
     RCLCPP_INFO(node->get_logger(), "Setting up Dobot services ...");
     std::shared_ptr<ServiceInstances> services = std::make_shared<ServiceInstances>();
     // ServiceInstances services;
-    CreateServices(node, services);
+    std::string nameSpace = argv[2];
+    CreateServices(node, services, nameSpace);
     RCLCPP_INFO(node->get_logger(), "Dobot Server Node running...");
     rclcpp::spin(node);
     RCLCPP_INFO(node->get_logger(), "Dobot Server Node exiting...");
