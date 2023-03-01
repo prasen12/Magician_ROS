@@ -12,6 +12,7 @@ find_package(std_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
+"msg/PoseMessage.msg"
 "srv/ClearAllAlarmsState.srv"
 "srv/GetAlarmsState.srv"
 "srv/GetARCParams.srv"
