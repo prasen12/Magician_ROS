@@ -1,5 +1,7 @@
 Magician_ROS.code-workspace
-.vscode
 build
 log
 install
+cache
+.obj-x86_64-linux-gnu
+debian

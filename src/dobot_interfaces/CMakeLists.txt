@@ -68,6 +68,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 "srv/SetPTPCoordinateParams.srv"
 "srv/SetPTPJointParams.srv"
 "srv/SetPTPJumpParams.srv"
+"srv/GetQueuedCmdCurrentIndex.srv"
+"srv/GetQueuedCmdMotionFinish.srv"
 "srv/SetQueuedCmdClear.srv"
 "srv/SetQueuedCmdForceStopExec.srv"
 "srv/SetQueuedCmdStartExec.srv"

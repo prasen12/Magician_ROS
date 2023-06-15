@@ -86,7 +86,7 @@ void GetAlarmsStateService(std::shared_ptr<dobot_interfaces::srv::GetAlarmsState
 
     res->result = GetAlarmsState(alarms_state, &len, sizeof(alarms_state));
     if (res->result == DobotCommunicate_NoError) {
-        for (int i = 0; i < len; i++) {
+        for (uint32_t i = 0; i < len; i++) {
             res->alarms_state.push_back(alarms_state[i]);
         }
     }
@@ -175,6 +175,8 @@ void SetHOMECmdService(std::shared_ptr<dobot_interfaces::srv::SetHOMECmd::Reques
 #include "dobot_interfaces/srv/set_queued_cmd_stop_exec.hpp"
 #include "dobot_interfaces/srv/set_queued_cmd_force_stop_exec.hpp"
 #include "dobot_interfaces/srv/set_queued_cmd_clear.hpp"
+#include "dobot_interfaces/srv/get_queued_cmd_current_index.hpp"
+#include "dobot_interfaces/srv/get_queued_cmd_motion_finish.hpp"
 
 void SetQueuedCmdStartExecService(std::shared_ptr<dobot_interfaces::srv::SetQueuedCmdStartExec::Request> req, std::shared_ptr<dobot_interfaces::srv::SetQueuedCmdStartExec::Response> res)
 {
@@ -194,6 +196,16 @@ void SetQueuedCmdForceStopExecService(std::shared_ptr<dobot_interfaces::srv::Set
 void SetQueuedCmdClearService(std::shared_ptr<dobot_interfaces::srv::SetQueuedCmdClear::Request> req, std::shared_ptr<dobot_interfaces::srv::SetQueuedCmdClear::Response> res)
 {
     res->result = SetQueuedCmdClear();
+}
+
+void GetQueuedCmdCurrentIndexService(std::shared_ptr<dobot_interfaces::srv::GetQueuedCmdCurrentIndex::Request> req, std::shared_ptr<dobot_interfaces::srv::GetQueuedCmdCurrentIndex::Response> res)  
+{
+    res->result = GetQueuedCmdCurrentIndex(&res->queued_cmd_index);
+}
+
+void GetQueuedCmdMotionFinishService(std::shared_ptr<dobot_interfaces::srv::GetQueuedCmdMotionFinish::Request> req, std::shared_ptr<dobot_interfaces::srv::GetQueuedCmdMotionFinish::Response> res)  
+{
+    res->result = GetQueuedCmdMotionFinish(&res->finished);   
 }
 
 /*
@@ -821,6 +833,8 @@ rclcpp::Service<dobot_interfaces::srv::SetQueuedCmdClear>::SharedPtr SetQueuedCm
 rclcpp::Service<dobot_interfaces::srv::SetQueuedCmdForceStopExec>::SharedPtr SetQueuedCmdForceStopExec;
 rclcpp::Service<dobot_interfaces::srv::SetQueuedCmdStartExec>::SharedPtr SetQueuedCmdStartExec;
 rclcpp::Service<dobot_interfaces::srv::SetQueuedCmdStopExec>::SharedPtr SetQueuedCmdStopExec;
+rclcpp::Service<dobot_interfaces::srv::GetQueuedCmdCurrentIndex>::SharedPtr GetQueuedCmdCurrentIndex;
+rclcpp::Service<dobot_interfaces::srv::GetQueuedCmdMotionFinish>::SharedPtr GetQueuedCmdMotionFinish;
 rclcpp::Service<dobot_interfaces::srv::SetTRIGCmd>::SharedPtr SetTRIGCmd;
 rclcpp::Service<dobot_interfaces::srv::SetWAITCmd>::SharedPtr SetWAITCmd;
 
@@ -856,6 +870,8 @@ rclcpp::Service<dobot_interfaces::srv::SetWAITCmd>::SharedPtr SetWAITCmd;
     serviceInstances->SetQueuedCmdStartExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdStartExec>("SetQueuedCmdStartExec", &SetQueuedCmdStartExecService, rmw_qos_profile_services_default, serviceCBGroup);
     serviceInstances->SetQueuedCmdStopExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdStopExec>("SetQueuedCmdStopExecService", &SetQueuedCmdStopExecService, rmw_qos_profile_services_default, serviceCBGroup);
     serviceInstances->SetQueuedCmdForceStopExec  = node->create_service<dobot_interfaces::srv::SetQueuedCmdForceStopExec>("SetQueuedCmdForceStopExecService", &SetQueuedCmdForceStopExecService, rmw_qos_profile_services_default, serviceCBGroup);
+    serviceInstances->GetQueuedCmdCurrentIndex = node->create_service<dobot_interfaces::srv::GetQueuedCmdCurrentIndex>("GetQueuedCmdCurrentIndexService", &GetQueuedCmdCurrentIndexService, rmw_qos_profile_services_default, serviceCBGroup);
+    serviceInstances->GetQueuedCmdMotionFinish  = node->create_service<dobot_interfaces::srv::GetQueuedCmdMotionFinish>("GetQueuedCmdMotionFinishService", &GetQueuedCmdMotionFinishService, rmw_qos_profile_services_default, serviceCBGroup);
 
     // End Effector Services
     serviceInstances->SetEndEffectorParams  = node->create_service<dobot_interfaces::srv::SetEndEffectorParams>("SetEndEffectorParams", &SetEndEffectorParamsService, rmw_qos_profile_services_default, serviceCBGroup);
@@ -889,10 +905,10 @@ rclcpp::Service<dobot_interfaces::srv::SetWAITCmd>::SharedPtr SetWAITCmd;
     serviceInstances->SetARCCmd  = node->create_service<dobot_interfaces::srv::SetARCCmd>("SetARCCmd", &SetARCCmdService, rmw_qos_profile_services_default, serviceCBGroup);
 
     // WAIT services
-        serviceInstances->SetWAITCmd  = node->create_service<dobot_interfaces::srv::SetWAITCmd>("SetWAITCmd", &SetWAITCmdService, rmw_qos_profile_services_default, serviceCBGroup);
+    serviceInstances->SetWAITCmd  = node->create_service<dobot_interfaces::srv::SetWAITCmd>("SetWAITCmd", &SetWAITCmdService, rmw_qos_profile_services_default, serviceCBGroup);
 
     // TRIG Services
-        serviceInstances->SetTRIGCmd  = node->create_service<dobot_interfaces::srv::SetTRIGCmd>("SetTRIGCmd", &SetTRIGCmdService, rmw_qos_profile_services_default, serviceCBGroup);
+    serviceInstances->SetTRIGCmd  = node->create_service<dobot_interfaces::srv::SetTRIGCmd>("SetTRIGCmd", &SetTRIGCmdService, rmw_qos_profile_services_default, serviceCBGroup);
 
     // EIO Services
     serviceInstances->SetIOMultiplexing  = node->create_service<dobot_interfaces::srv::SetIOMultiplexing>("SetIOMultiplexing", &SetIOMultiplexingService, rmw_qos_profile_services_default, serviceCBGroup);
